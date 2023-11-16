@@ -7,7 +7,6 @@ require("./models/dbcon");
 
 const userRoutes = require("./routes/userRoutes");
 
-
 app.use(express.json());
 app.use(
   cors({

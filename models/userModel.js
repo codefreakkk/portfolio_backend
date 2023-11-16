@@ -23,6 +23,11 @@ const user = mongoose.Schema({
     type: String,
     required: [true, "Please add your password"],
   },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
   u_description: {
     type: String,
     maxLength: [100, "Only 100 Characters are allowed"],
@@ -52,6 +57,27 @@ const user = mongoose.Schema({
     type: String,
     default: "NOFILE",
   },
+  skills: {
+    type: [],
+    default: [{}],
+  },
+  leetcode: {
+    type: String,
+    default: "",
+  },
+  codeforces: {
+    type: String,
+    default: "",
+  },
+  gfg: {
+    type: String,
+    default: "",
+  },
+  linkedin: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("userModel", user);
+

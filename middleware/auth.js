@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/userModel");
 
 const protect = async (req, res, next) => {
   let token;
@@ -20,10 +20,17 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    // Verify token
     const verify = jwt.verify(token, "devsinfo");
 
-    req.user = await User.findById(verify._id);
+    req.user = await User.findOne({ _id: verify.uid });
+
+    // check if user is null
+    if (req.user === null) {
+      return res.status(401).json({
+        success: false,
+        data: "Not authorized to access this route",
+      });
+    }
 
     next();
   } catch (err) {

@@ -1,54 +1,77 @@
 const userModel = require("../models/userModel");
-const jwt = require("jsonwebtoken");
 
-exports.login = async (req, res) => {
+exports.getUserById = async (req, res) => {
   try {
-    const { u_name, u_password } = req.body;
-    const user = await userModel.findOne({ u_name, u_password });
-    if (user) {
-      const uid = user._id.toString();
-
-      // generate JWT token
-      const token = jwt.sign({ uid }, "devsinfo", { expiresIn: "1d" });
-      return res
-        .status(200)
-        .json({ success: true, token: `Bearer ${token}`, u_name });
-    } else
-      return res.status(200).json({
-        success: false,
-        message: `Please check your username or password`,
-      });
+    const uid = req.params.id;
+    const data = await userModel.findOne(
+      { _id: uid },
+      { u_password: 0, role: 0 }
+    );
+    if (data) {
+      return res.status(200).json({ success: true, data });
+    } else {
+      return res.status(200).json({ success: false, data: null });
+    }
   } catch (e) {
     return res.status(500).json({ err: e.message });
   }
 };
 
-exports.signup = async (req, res) => {
+exports.addPersonalDetails = async (req, res) => {
   try {
-    const { u_name, u_password } = req.body;
-    const user = await userModel.findOne({ u_name, u_password });
+    const uid = req.params.id;
+    const {
+      full_name,
+      u_email,
+      u_contact,
+      u_description,
+      u_company_name,
+      u_work_experience,
+      u_city,
+      u_country,
+      u_image,
+      u_resume,
+      skills,
+      leetcode,
+      codeforces,
+      gfg,
+      linkedin,
+    } = req.body;
 
-    if (user) {
-      return res.status(200).json({
-        success: false,
-        message: `User with ${u_name} already exists`,
-      });
-    }
+    const data = await userModel.findOneAndUpdate(
+      { _id: uid },
+      {
+        $set: {
+          full_name,
+          u_email,
+          u_contact,
+          u_description,
+          u_company_name,
+          u_work_experience,
+          u_city,
+          u_country,
+          u_image,
+          u_resume,
+          skills,
+          leetcode,
+          codeforces,
+          gfg,
+          linkedin,
+        },
+      }
+    );
 
-    const data = await userModel.create({ u_name, u_password });
     if (data) {
       return res
         .status(200)
-        .json({ success: true, message: "Signup successfull" });
+        .json({ success: true, message: "Data updated successfully" });
     } else {
-      return res
-        .status(400)
-        .json({ success: false, message: "Some error occured" });
+      return res.status(400).json({
+        success: false,
+        message: "Data not updated some error occured",
+      });
     }
   } catch (e) {
-    console.log(e);
     return res.status(500).json({ err: e.message });
   }
 };
-
-// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NTU2MDU1NzdmMmQ4ZjFkZmI4NTI5NzQiLCJpYXQiOjE3MDAxMzY5NTAsImV4cCI6MTcwMDIyMzM1MH0.T69uENynFbT9Kej-PeNKeMqTpFo1aUDEN6c2LL47p-Y
