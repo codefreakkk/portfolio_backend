@@ -6,6 +6,7 @@ const cors = require("cors");
 require("./models/dbcon");
 
 const userRoutes = require("./routes/userRoutes");
+const projectRoutes = require("./routes/projectRoutes");
 
 app.use(express.json());
 app.use(
@@ -19,7 +20,9 @@ app.get("/", (req, res) => {
   return res.status(200).json({ msg: "hello world" });
 });
 
+// routes
 app.use("/api/v1", userRoutes);
+app.use("/api/v1", projectRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`listening at port ${PORT}`));

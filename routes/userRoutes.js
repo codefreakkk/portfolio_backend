@@ -5,6 +5,7 @@ const router = express.Router();
 const protect = require("../middleware/auth");
 const authorize = require("../middleware/authorize");
 
+// controller
 const userAuthController = require("../controller/userAuthController");
 const userController = require("../controller/userController");
 
@@ -16,7 +17,9 @@ router.post("/signup", userAuthController.signup);
 router.get("/getuserbyid/:id", protect, authorize("user"), userController.getUserById);
 router.get("/getaccountdetailsbyid/:id", protect, authorize("user"), userController.getAccountDetailsById);
 
-router.put("/updatepersonaldetails/:id", protect, authorize("user"), userController.addPersonalDetails);
-router.put("/updateaccountdetailsbyid/:id", protect, authorize("user"), userController.updateAccountDetailsById);
+router.put("/updatepersonaldetailsbyid/:id", protect, authorize("user"), userController.updatePersonalDetailsById);
+router.put("/updateaccountdetailsbyid/:id", protect, authorize("user"), userController.updateAccountDetailsById); 
+
+// need to work on upload profile and resume section
 
 module.exports = router;

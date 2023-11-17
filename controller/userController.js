@@ -17,7 +17,24 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-exports.addPersonalDetails = async (req, res) => {
+exports.getAccountDetailsById = async (req, res) => {
+  try {
+    const uid = req.params.id;
+    const data = await userModel.findOne(
+      { _id: uid },
+      { u_name: 1, full_name: 1, u_email: 1, u_password: 1 }
+    );
+    if (data) {
+      return res.status(200).json({ success: true, data });
+    } else {
+      return res.status(400).json({ success: false, data: null });
+    }
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.updatePersonalDetailsById = async (req, res) => {
   try {
     const uid = req.params.id;
     const {
@@ -29,8 +46,6 @@ exports.addPersonalDetails = async (req, res) => {
       u_work_experience,
       u_city,
       u_country,
-      u_image,
-      u_resume,
       skills,
       leetcode,
       codeforces,
@@ -50,8 +65,6 @@ exports.addPersonalDetails = async (req, res) => {
           u_work_experience,
           u_city,
           u_country,
-          u_image,
-          u_resume,
           skills,
           leetcode,
           codeforces,
@@ -76,23 +89,6 @@ exports.addPersonalDetails = async (req, res) => {
   }
 };
 
-exports.getAccountDetailsById = async (req, res) => {
-  try {
-    const uid = req.params.id;
-    const data = await userModel.findOne(
-      { _id: uid },
-      { u_name: 1, full_name: 1, u_email: 1, u_password: 1 }
-    );
-    if (data) {
-      return res.status(200).json({ success: true, data });
-    } else {
-      return res.status(400).json({ success: false, data: null });
-    }
-  } catch (e) {
-    return res.status(500).json({ err: e.message });
-  }
-};
-
 exports.updateAccountDetailsById = async (req, res) => {
   try {
     const uid = req.params.id;
@@ -106,18 +102,23 @@ exports.updateAccountDetailsById = async (req, res) => {
     }
 
     // check if username is already taken
+    const user = await userModel.findOne({ _id: { $nin: [uid] }, u_name });
+    if (user !== null) {
+      return res
+        .status(200)
+        .json({ success: false, message: `${u_name} is already taken` });
+    }
 
-    // check if email is already taken 
-
-    const data = await userModel.findOneAndUpdate(             
-      { _id: uid },                     
-      {                                 
-        full_name,                      
-        u_name,                         
-        u_email,                        
-        u_password,                     
-      }                                 
-    );                                  
+    // update user account details
+    const data = await userModel.findOneAndUpdate(
+      { _id: uid },
+      {
+        full_name,
+        u_name,
+        u_email,
+        u_password,
+      }
+    );
 
     if (data) {
       return res
