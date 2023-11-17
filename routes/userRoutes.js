@@ -14,6 +14,9 @@ router.post("/signup", userAuthController.signup);
 
 // user routes
 router.get("/getuserbyid/:id", protect, authorize("user"), userController.getUserById);
-router.put("/addpersonaldetails/:id", protect, authorize("user"), userController.addPersonalDetails);
+router.get("/getaccountdetailsbyid/:id", protect, authorize("user"), userController.getAccountDetailsById);
+
+router.put("/updatepersonaldetails/:id", protect, authorize("user"), userController.addPersonalDetails);
+router.put("/updateaccountdetailsbyid/:id", protect, authorize("user"), userController.updateAccountDetailsById);
 
 module.exports = router;
