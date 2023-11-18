@@ -14,11 +14,33 @@ router.post("/login", userAuthController.login);
 router.post("/signup", userAuthController.signup);
 
 // user routes
-router.get("/getuserbyid/:id", protect, authorize("user"), userController.getUserById);
-router.get("/getaccountdetailsbyid/:id", protect, authorize("user"), userController.getAccountDetailsById);
+router.get(
+  "/getuserbyid/:id",
+  protect,
+  authorize("user"),
+  userController.getUserById
+);
 
-router.put("/updatepersonaldetailsbyid/:id", protect, authorize("user"), userController.updatePersonalDetailsById);
-router.put("/updateaccountdetailsbyid/:id", protect, authorize("user"), userController.updateAccountDetailsById); 
+router.get(
+  "/getaccountdetailsbyid/:id",
+  protect,
+  authorize("user"),
+  userController.getAccountDetailsById
+);
+
+router.put(
+  "/updatepersonaldetailsbyid/:id",
+  protect,
+  authorize("user"),
+  userController.updatePersonalDetailsById
+);
+
+router.put(
+  "/updateaccountdetailsbyid/:id",
+  protect,
+  authorize("user"),
+  userController.updateAccountDetailsById
+);
 
 // need to work on upload profile and resume section
 

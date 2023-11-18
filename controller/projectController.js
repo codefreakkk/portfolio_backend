@@ -1,8 +1,32 @@
 const projectModel = require("../models/projectsModel");
 
-exports.addProject = async (req, res) => {
+exports.getAllProjectsById = async (req, res) => {
+  try {
+    const uid = req.params.id;
+    const data = await projectModel.find({ uid });
+    if (data) {
+      return res.status(200).json({ success: true, data });
+    } else {
+      return res.status(400).json({ succss: false, data: null });
+    }
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.getProjectById = async (req, res) => {
+  try {
+    
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.updateProjectById = async (req, res) => {
   try {
     const {
+      uid,
+      pid,
       project_name,
       tagline,
       image,
@@ -11,11 +35,68 @@ exports.addProject = async (req, res) => {
       description,
     } = req.body;
 
-    const uid = req.params.id;
+    // validate if all fields are not empty
+    if (
+      [
+        uid,
+        pid,
+        project_name,
+        tagline,
+        image,
+        github_repo,
+        project_url,
+        description,
+      ].includes("")
+    ) {
+      return res
+        .status(200)
+        .json({ success: false, message: "Please fill all fields" });
+    }
+
+    const data = await projectModel.findOneAndUpdate(
+      { _id: pid, uid: uid },
+      {
+        $set: {
+          project_name,
+          tagline,
+          image,
+          github_repo,
+          project_url,
+          description,
+        },
+      }
+    );
+
+    if (data) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Data updated successfully" });
+    } else {
+      return res
+        .status(400)
+        .json({ success: false, message: "Data not updated successfully" });
+    }
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.addProject = async (req, res) => {
+  try {
+    const {
+      uid,
+      project_name,
+      tagline,
+      image,
+      github_repo,
+      project_url,
+      description,
+    } = req.body;
 
     // validate if all fields are not empty
     if (
       [
+        uid,
         project_name,
         tagline,
         image,
@@ -30,21 +111,15 @@ exports.addProject = async (req, res) => {
     }
 
     // save data into db
-    const data = await projectModel.updateOne(
-      { _id: uid },
-      {
-        $set: {
-          _id: uid,
-          project_name,
-          tagline,
-          image,
-          github_repo,
-          project_url,
-          description,
-        },
-      },
-      { upsert: true }
-    );
+    const data = await projectModel.create({
+      uid,
+      project_name,
+      tagline,
+      image,
+      github_repo,
+      project_url,
+      description,
+    });
 
     if (data) {
       return res
@@ -53,7 +128,7 @@ exports.addProject = async (req, res) => {
     } else {
       return res
         .status(400)
-        .json({ success: true, message: "Data not updated successfully" });
+        .json({ success: false, message: "Data not updated successfully" });
     }
   } catch (e) {
     return res.status(500).json({ err: e.message });

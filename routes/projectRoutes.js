@@ -8,7 +8,32 @@ const authorize = require("../middleware/authorize");
 // controllers
 const projectController = require("../controller/projectController");
 
-router.put("/addproject/:id", projectController.addProject); // need to work on cover image section 
+router.get(
+  "/getallprojectsbyid/:id",
+  protect,
+  authorize("user"),
+  projectController.getAllProjectsById
+);
 
+router.get(
+  "/getprojectbyid/:id",
+  protect,
+  authorize("user"),
+  projectController.getProjectById
+);
+
+router.post(
+  "/addproject",
+  protect,
+  authorize("user"),
+  projectController.addProject
+); // need to work on cover image section
+
+router.put(
+  "/updateprojectbyid",
+  protect,
+  authorize("user"),
+  projectController.updateProjectById
+); // need to work on cover image section
 
 module.exports = router;
