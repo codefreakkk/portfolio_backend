@@ -16,7 +16,13 @@ exports.getAllProjectsById = async (req, res) => {
 
 exports.getProjectById = async (req, res) => {
   try {
-    
+    const { uid, pid } = req.params;
+    const data = await projectModel.findOne({ _id: pid, uid: uid });
+    if (data) {
+      return res.status(200).json({ success: true, data });
+    } else {
+      return res.status(400).json({ succss: false, data: null });
+    }
   } catch (e) {
     return res.status(500).json({ err: e.message });
   }

@@ -16,7 +16,7 @@ router.get(
 );
 
 router.get(
-  "/getprojectbyid/:id",
+  "/getprojectbyid/:uid/:pid",
   protect,
   authorize("user"),
   projectController.getProjectById
