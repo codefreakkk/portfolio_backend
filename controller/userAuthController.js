@@ -12,7 +12,7 @@ exports.login = async (req, res) => {
       const token = jwt.sign({ uid }, "devsinfo", { expiresIn: "1d" });
       return res
         .status(200)
-        .json({ success: true, token: `Bearer ${token}`, u_name });
+        .json({ success: true, token: `Bearer ${token}`, u_name, uid });
     } else
       return res.status(200).json({
         success: false,
@@ -50,3 +50,4 @@ exports.signup = async (req, res) => {
     return res.status(500).json({ err: e.message });
   }
 };
+

@@ -3,7 +3,6 @@ const router = express.Router();
 
 // auth
 const protect = require("../middleware/auth");
-const authorize = require("../middleware/authorize");
 
 // controller
 const userAuthController = require("../controller/userAuthController");
@@ -17,28 +16,24 @@ router.post("/signup", userAuthController.signup);
 router.get(
   "/getuserbyid/:id",
   protect,
-  authorize("user"),
   userController.getUserById
 );
 
 router.get(
   "/getaccountdetailsbyid/:id",
   protect,
-  authorize("user"),
   userController.getAccountDetailsById
 );
 
 router.put(
   "/updatepersonaldetailsbyid/:id",
   protect,
-  authorize("user"),
   userController.updatePersonalDetailsById
 );
 
 router.put(
   "/updateaccountdetailsbyid/:id",
   protect,
-  authorize("user"),
   userController.updateAccountDetailsById
 );
 

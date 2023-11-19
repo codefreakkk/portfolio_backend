@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const user = mongoose.Schema({
   full_name: {
     type: String,
-    default: "",
+    default: "Enter Your Full Name",
   },
   u_name: {
     type: String,
@@ -31,7 +31,7 @@ const user = mongoose.Schema({
   u_description: {
     type: String,
     maxLength: [100, "Only 100 Characters are allowed"],
-    default: "",
+    default: "Enter Your Description",
   },
   u_company_name: {
     type: String,
@@ -43,11 +43,11 @@ const user = mongoose.Schema({
   },
   u_city: {
     type: String,
-    default: "",
+    default: "Enter Your City",
   },
   u_country: {
     type: String,
-    default: "",
+    default: "Enter Your Country",
   },
   u_image: {
     type: String,
@@ -59,23 +59,23 @@ const user = mongoose.Schema({
   },
   skills: {
     type: [],
-    default: [{}],
+    default: [],
   },
   leetcode: {
     type: String,
-    default: "",
+    default: "https://leetcode.com",
   },
   codeforces: {
     type: String,
-    default: "",
+    default: "https://codeforces.com",
   },
   gfg: {
     type: String,
-    default: "",
+    default: "https://geeksforgeeks.org",
   },
   linkedin: {
     type: String,
-    default: "",
+    default: "https://linkedin.com",
   },
 });
 
