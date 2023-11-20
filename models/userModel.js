@@ -13,7 +13,6 @@ const user = mongoose.Schema({
   u_email: {
     type: String,
     default: "",
-    unique: [true, "User already exists"],
   },
   u_contact: {
     type: String,

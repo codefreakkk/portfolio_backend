@@ -19,7 +19,7 @@ const project = mongoose.Schema({
   },
   github_repo: {
     type: String,
-    default: ""
+    default: "https://github.com"
   },
   project_url: {
     type: String,
