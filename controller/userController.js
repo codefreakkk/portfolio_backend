@@ -46,7 +46,7 @@ exports.updatePersonalDetailsById = async (req, res) => {
       u_work_experience,
       u_city,
       u_country,
-      skills,
+      skillsArray,
       leetcode,
       codeforces,
       gfg,
@@ -65,7 +65,7 @@ exports.updatePersonalDetailsById = async (req, res) => {
           u_work_experience,
           u_city,
           u_country,
-          skills,
+          skills: skillsArray,
           leetcode,
           codeforces,
           gfg,
@@ -92,10 +92,10 @@ exports.updatePersonalDetailsById = async (req, res) => {
 exports.updateAccountDetailsById = async (req, res) => {
   try {
     const uid = req.params.id;
-    const { full_name, u_name, u_email, u_password } = req.body;
+    const { u_name, u_password } = req.body;
 
     // check if any field is empty
-    if ([full_name, u_name, u_email, u_password].includes("")) {
+    if ([u_name, u_password].includes("")) {
       return res
         .status(400)
         .json({ success: false, message: "Some fields are empty" });
@@ -113,9 +113,7 @@ exports.updateAccountDetailsById = async (req, res) => {
     const data = await userModel.findOneAndUpdate(
       { _id: uid },
       {
-        full_name,
         u_name,
-        u_email,
         u_password,
       }
     );
