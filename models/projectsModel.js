@@ -17,6 +17,10 @@ const project = mongoose.Schema({
     type: String,
     default: "",
   },
+  like: {
+    type: Number, 
+    default: 0,
+  },
   image: {
     type: String, 
     default: "",

@@ -131,3 +131,33 @@ exports.updateAccountDetailsById = async (req, res) => {
     return res.status(500).json({ err: e.message });
   }
 };
+
+exports.getAllUserPagination = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page) || 1;
+    let limitCount = 12;
+    let skipCount = (page - 1) * limitCount;
+
+    const result = await userModel.find().limit(limitCount).skip(skipCount);
+
+    const allUsers = await userModel.find();
+    const totalLength = allUsers.length;
+    const count = Math.ceil(totalLength / limitCount);
+
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+        pageCount: count == 0 ? 1 : count,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        pageCount: 0,
+      });
+    }
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};

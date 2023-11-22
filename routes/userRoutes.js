@@ -13,16 +13,18 @@ router.post("/login", userAuthController.login);
 router.post("/signup", userAuthController.signup);
 
 // user routes
-router.get(
-  "/getuserbyid/:id",
-  protect,
-  userController.getUserById
-);
+router.get("/getuserbyid/:id", protect, userController.getUserById);
 
 router.get(
   "/getaccountdetailsbyid/:id",
   protect,
   userController.getAccountDetailsById
+);
+
+router.get(
+  "/getalluser-pagination/:page",
+  protect,
+  userController.getAllUserPagination
 );
 
 router.put(

@@ -7,6 +7,7 @@ require("./models/dbcon");
 
 const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const projectCommentsRoutes = require("./routes/projectCommentsRoutes");
 
 app.use(express.json());
 app.use(
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", projectRoutes);
+app.use("/api/v1", projectCommentsRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`listening at port ${PORT}`));
