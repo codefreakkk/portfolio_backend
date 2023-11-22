@@ -9,6 +9,10 @@ const project = mongoose.Schema({
     type: String,
     required: [true, "Please enter project name"]
   },
+  project_domain: {
+    type: String,
+    default: "",
+  },
   tagline: {
     type: String,
     default: "",
@@ -28,6 +32,7 @@ const project = mongoose.Schema({
   description: {
     type: String,
     default: "",
+    maxLength: [500, "Only 500 Characters are allowed"],
   },
 });
 

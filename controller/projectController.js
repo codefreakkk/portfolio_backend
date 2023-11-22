@@ -87,11 +87,48 @@ exports.updateProjectById = async (req, res) => {
   }
 };
 
+// pagination
+exports.getAllProjectsByIdPagination = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page);
+    let limitCount = 12;
+    let skipCount = (page - 1) * limitCount;
+
+    const result = await projectModel
+      .find()
+      .limit(limitCount)
+      .skip(skipCount);
+
+    const allProjects = await projectModel.find();
+    const totalLength = allProjects.length;
+    const count = Math.ceil(totalLength / limitCount);
+
+    console.log(page);
+
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+        pageCount: count == 0 ? 1 : count,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        pageCount: 0,
+      });
+    }
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
+
 exports.addProject = async (req, res) => {
   try {
     const {
       uid,
       project_name,
+      project_domain,
       tagline,
       image,
       github_repo,
@@ -104,8 +141,8 @@ exports.addProject = async (req, res) => {
       [
         uid,
         project_name,
+        project_domain,
         tagline,
-        image,
         github_repo,
         project_url,
         description,
@@ -120,6 +157,7 @@ exports.addProject = async (req, res) => {
     const data = await projectModel.create({
       uid,
       project_name,
+      project_domain,
       tagline,
       image,
       github_repo,

@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
 exports.signup = async (req, res) => {
   try {
     const { u_name, u_password } = req.body;
-    const user = await userModel.findOne({ u_name, u_password });
+    const user = await userModel.findOne({ u_name });
 
     if (user) {
       return res.status(200).json({
