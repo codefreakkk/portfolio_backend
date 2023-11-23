@@ -13,6 +13,7 @@ exports.getUserById = async (req, res) => {
       return res.status(400).json({ success: false, data: null });
     }
   } catch (e) {
+    console.log(e);
     return res.status(500).json({ err: e.message });
   }
 };
