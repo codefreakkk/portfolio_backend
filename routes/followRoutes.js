@@ -8,7 +8,7 @@ const protect = require("../middleware/auth");
 const followController = require("../controller/followController");
 
 router.get("/getallusers/:id/:page", protect, followController.getAllUsers);
-router.get("/getfollowes/:id", protect, followController.getFollowers);
+router.get("/getfollowers/:id", protect, followController.getFollowers);
 router.get("/getfollowing/:id", protect, followController.getFollowing);
 
 router.post("/follow", protect, followController.addFollower);

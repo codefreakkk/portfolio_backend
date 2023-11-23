@@ -45,19 +45,50 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getFollowers = async (req, res) => {
   try {
+    const uid = req.params.id;
+    const result = await followModel
+      .find({ uid })
+      .populate({ path: "follower_id", select: { u_password: 0, role: 0 } });
 
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+      });
+    }
   } catch (e) {
+    console.log(e);
     return res.status(500).json({ err: e.message });
   }
 };
 
 exports.getFollowing = async (req, res) => {
-    try {
+  try {
+    const uid = req.params.id;
+    const result = await followModel
+      .find({ follower_id: uid })
+      .populate({ path: "uid", select: { u_password: 0, role: 0 } });
 
-    } catch (e) {
-        return res.status(500).json({ err: e.message });
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+      });
     }
-}
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
 
 exports.addFollower = async (req, res) => {
   try {

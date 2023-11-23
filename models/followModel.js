@@ -7,7 +7,7 @@ const followModel = mongoose.Schema({
   },
   follower_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "userMode",
+    ref: "userModel",
   },
 });
 
