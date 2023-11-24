@@ -238,7 +238,7 @@ exports.searchAllUsers = async (req, res) => {
 
     const result = await userModel.find({
       $and: [
-        {_id : {$nin: [uid]}},
+        { _id: { $nin: [uid] } },
         { u_name: { $regex: `${u_name}` } },
         { u_company_name: { $regex: `${u_company_name.toLowerCase()}` } },
       ],
@@ -257,6 +257,31 @@ exports.searchAllUsers = async (req, res) => {
     }
   } catch (e) {
     console.log(e);
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.updateGithubUserName = async (req, res) => {
+  try {
+    const uid = req.params.id;
+    const { user_name } = req.body;
+
+    const result = await userModel.findOneAndUpdate(
+      { _id: uid },
+      { $set: { github_user_name: user_name } }
+    );
+
+    if (result) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Github username updated" });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Github username not updated",
+      });
+    }
+  } catch (e) {
     return res.status(500).json({ err: e.message });
   }
 };

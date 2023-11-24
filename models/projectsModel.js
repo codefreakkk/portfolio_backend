@@ -38,6 +38,10 @@ const project = mongoose.Schema({
     default: "",
     maxLength: [500, "Only 500 Characters are allowed"],
   },
+  u_name:{
+    type:String,
+    default: "",
+  }
 });
 
 module.exports = mongoose.model("projectModel", project);

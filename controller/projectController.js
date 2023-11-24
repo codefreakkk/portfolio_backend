@@ -158,9 +158,9 @@ exports.addProject = async (req, res) => {
       github_repo,
       project_url,
       description,
-      image,
+      u_name,
     } = req.body;
-
+    console.log(u_name);
     // validate if all fields are not empty
     if (
       [
@@ -190,7 +190,8 @@ exports.addProject = async (req, res) => {
           github_repo,
           project_url,
           description,
-          image: result.url
+          image: result.url,
+          u_name
         });
         if (data) {
           return res

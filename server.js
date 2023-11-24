@@ -29,6 +29,5 @@ app.use("/api/v1", projectRoutes);
 app.use("/api/v1", projectCommentsRoutes);
 app.use("/api/v1", followRoutes);
 app.use("/api/v1", themeRoutes);
-
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`listening at port ${PORT}`));

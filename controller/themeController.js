@@ -19,11 +19,11 @@ exports.getAllTheme = async (req, res) => {
 
 exports.addTheme = async (req, res) => {
   try {
-    let { theme_no, theme_name } = req.body;
+    let { theme_no, theme_name, theme_description } = req.body;
 
     // validate fields
     theme_no = Number(theme_no);
-    if (!theme_no || !theme_name) {
+    if (!theme_no || !theme_name || !theme_description) {
       return res
         .status(400)
         .json({ success: false, message: "Some error occured" });
@@ -35,7 +35,11 @@ exports.addTheme = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Theme number already exists" });
     }
-    const result = await themeModel.create({ theme_no, theme_name });
+    const result = await themeModel.create({
+      theme_no,
+      theme_name,
+      theme_description,
+    });
     if (result) {
       return res
         .status(200)

@@ -8,10 +8,9 @@ const themeModel = mongoose.Schema({
   theme_name: {
     type: String,
   },
-  visible: {
-    type: Boolean,
-    default: false,
-  },
+  theme_description: {
+    type: String, 
+  }
 });
 
 module.exports = mongoose.model("themeModel", themeModel);

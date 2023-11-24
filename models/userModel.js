@@ -80,6 +80,10 @@ const user = mongoose.Schema({
     type: String,
     default: "https://linkedin.com",
   },
+  github_user_name: {
+    type: String, 
+    default: ""
+  }
 });
 
 module.exports = mongoose.model("userModel", user);

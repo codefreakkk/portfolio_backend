@@ -57,6 +57,8 @@ router.put(
   userController.updateAccountDetailsById
 );
 
+router.put("/updategithub/:id", protect, userController.updateGithubUserName);
+
 router.put("/updateprofileimage", protect, userController.updateProfileImage);
 
 module.exports = router;
