@@ -25,13 +25,25 @@ router.get(
   projectController.getAllProjectsByIdPagination
 );
 
+router.get(
+  "/getallprojectsbyuserid/:id",
+  projectController.getAllProjectsByUserId
+);
+
 router.post("/addproject", protect, projectController.addProject); // need to work on cover image section
 
 router.put("/updateprojectbyid", protect, projectController.updateProjectById); // need to work on cover image section
 
-router.put("/updateprojectlike/:pid", protect, projectController.updateProjectLike);
+router.put(
+  "/updateprojectlike/:pid",
+  protect,
+  projectController.updateProjectLike
+);
 
-router.delete("/deleteprojectbyid/:pid", protect, projectController.deleteProjectById);
-
+router.delete(
+  "/deleteprojectbyid/:pid",
+  protect,
+  projectController.deleteProjectById
+);
 
 module.exports = router;

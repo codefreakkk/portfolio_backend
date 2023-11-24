@@ -9,6 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const projectCommentsRoutes = require("./routes/projectCommentsRoutes");
 const followRoutes = require("./routes/followRoutes");
+const themeRoutes = require("./routes/themeRoutes");
 
 app.use(express.json());
 app.use(
@@ -27,6 +28,7 @@ app.use("/api/v1", userRoutes);
 app.use("/api/v1", projectRoutes);
 app.use("/api/v1", projectCommentsRoutes);
 app.use("/api/v1", followRoutes);
+app.use("/api/v1", themeRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`listening at port ${PORT}`));

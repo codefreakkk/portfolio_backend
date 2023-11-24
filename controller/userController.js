@@ -18,6 +18,24 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+exports.getUserByName = async (req, res) => {
+  try {
+    const uname = req.params.uname;
+    const data = await userModel.findOne(
+      { u_name: uname },
+      { u_password: 0, role: 0 }
+    );
+    if (data) {
+      return res.status(200).json({ success: true, data });
+    } else {
+      return res.status(400).json({ success: false, data: null });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ err: e.message });
+  }
+}
+
 exports.getAccountDetailsById = async (req, res) => {
   try {
     const uid = req.params.id;

@@ -19,6 +19,7 @@ exports.login = async (req, res) => {
         message: `Please check your username or password`,
       });
   } catch (e) {
+    console.log(e);
     return res.status(500).json({ err: e.message });
   }
 };

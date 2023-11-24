@@ -14,6 +14,8 @@ router.post("/signup", userAuthController.signup);
 
 // user routes
 router.get("/getuserbyid/:id", protect, userController.getUserById);
+router.get("/getuserbyname/:uname", userController.getUserByName);
+
 
 router.get(
   "/getaccountdetailsbyid/:id",

@@ -28,6 +28,20 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
+exports.getAllProjectsByUserId = async (req, res) =>{
+  try {
+    const uid = req.params.id;
+    const data = await projectsModel.find({ uid });
+    if (data) {
+      return res.status(200).json({ success: true, data });
+    } else {
+      return res.status(400).json({ success: false, data: null });
+    }
+  } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+}
+
 exports.updateProjectById = async (req, res) => {
   try {
     const {

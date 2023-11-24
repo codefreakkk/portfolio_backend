@@ -27,6 +27,10 @@ const user = mongoose.Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  u_theme: {
+    type: Number,
+    default: 1
+  },
   u_description: {
     type: String,
     maxLength: [100, "Only 100 Characters are allowed"],
@@ -79,4 +83,3 @@ const user = mongoose.Schema({
 });
 
 module.exports = mongoose.model("userModel", user);
-
