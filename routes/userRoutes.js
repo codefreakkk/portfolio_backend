@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const cloudinary = require("cloudinary").v2
+const cloudinary = require("cloudinary").v2;
 
 // image upload configuration
 cloudinary.config({
@@ -31,7 +31,6 @@ router.post("/signup", userAuthController.signup);
 router.get("/getuserbyid/:id", protect, userController.getUserById);
 router.get("/getuserbyname/:uname", userController.getUserByName);
 
-
 router.get(
   "/getaccountdetailsbyid/:id",
   protect,
@@ -43,6 +42,8 @@ router.get(
   protect,
   userController.getAllUserPagination
 );
+
+router.post("/searchallusers", protect, userController.searchAllUsers);
 
 router.put(
   "/updatepersonaldetailsbyid/:id",
@@ -56,6 +57,6 @@ router.put(
   userController.updateAccountDetailsById
 );
 
-router.put("/updateprofileimage", protect, userController.updateProfileImage)
+router.put("/updateprofileimage", protect, userController.updateProfileImage);
 
 module.exports = router;

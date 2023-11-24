@@ -82,7 +82,7 @@ exports.updatePersonalDetailsById = async (req, res) => {
           u_email,
           u_contact,
           u_description,
-          u_company_name,
+          u_company_name: u_company_name.toLowerCase(),
           u_work_experience,
           u_city,
           u_country,
@@ -215,9 +215,10 @@ exports.updateProfileImage = async (req, res) => {
             .json({ success: true, message: "Profile Image updated" });
         }
       } else {
-        return res
-          .status(400)
-          .json({ success: false, message: "Profile Image not updated some database issue" });
+        return res.status(400).json({
+          success: false,
+          message: "Profile Image not updated some database issue",
+        });
       }
 
       // if anything goes wrong
@@ -225,6 +226,35 @@ exports.updateProfileImage = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Profile Image not updated" });
     });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.searchAllUsers = async (req, res) => {
+  try {
+    const { u_name, u_company_name, uid } = req.body;
+
+    const result = await userModel.find({
+      $and: [
+        {_id : {$nin: [uid]}},
+        { u_name: { $regex: `${u_name}` } },
+        { u_company_name: { $regex: `${u_company_name.toLowerCase()}` } },
+      ],
+    });
+
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+      });
+    }
   } catch (e) {
     console.log(e);
     return res.status(500).json({ err: e.message });

@@ -1,4 +1,5 @@
 const projectsModel = require("../models/projectsModel");
+const cloudinary = require("cloudinary").v2;
 
 exports.getAllProjectsById = async (req, res) => {
   try {
@@ -28,7 +29,7 @@ exports.getProjectById = async (req, res) => {
   }
 };
 
-exports.getAllProjectsByUserId = async (req, res) =>{
+exports.getAllProjectsByUserId = async (req, res) => {
   try {
     const uid = req.params.id;
     const data = await projectsModel.find({ uid });
@@ -40,7 +41,38 @@ exports.getAllProjectsByUserId = async (req, res) =>{
   } catch (e) {
     return res.status(500).json({ err: e.message });
   }
-}
+};
+
+exports.getAllProjectsPagination = async (req, res) => {
+  try {
+    const page = parseInt(req.params.page) || 1;
+    let limitCount = 12;
+    let skipCount = (page - 1) * limitCount;
+
+    const result = await projectsModel.find().limit(limitCount).skip(skipCount);
+
+    const allProjects = await projectsModel.find();
+    const totalLength = allProjects.length;
+    const count = Math.ceil(totalLength / limitCount);
+
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+        pageCount: count == 0 ? 1 : count,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        pageCount: 0,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ err: e.message });
+  }
+};
 
 exports.updateProjectById = async (req, res) => {
   try {
@@ -77,8 +109,8 @@ exports.updateProjectById = async (req, res) => {
       { _id: pid, uid: uid },
       {
         $set: {
-          project_name,
-          project_domain,
+          project_name: project_name.toLowerCase(),
+          project_domain: project_domain.toLowerCase(),
           tagline,
           github_repo,
           project_url,
@@ -102,48 +134,31 @@ exports.updateProjectById = async (req, res) => {
   }
 };
 
-exports.getAllProjectsByIdPagination = async (req, res) => {
-  try {
-    const page = parseInt(req.params.page) || 1;
-    let limitCount = 12;
-    let skipCount = (page - 1) * limitCount;
-
-    const result = await projectsModel.find().limit(limitCount).skip(skipCount);
-
-    const allProjects = await projectsModel.find();
-    const totalLength = allProjects.length;
-    const count = Math.ceil(totalLength / limitCount);
-
-    if (result) {
-      return res.status(200).json({
-        success: true,
-        data: result,
-        pageCount: count == 0 ? 1 : count,
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        data: null,
-        pageCount: 0,
-      });
-    }
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ err: e.message });
-  }
-};
-
 exports.addProject = async (req, res) => {
   try {
+    if (!req.files) {
+      res
+        .status(400)
+        .json({ success: false, message: "Please select a file first" });
+      console.log("file not received");
+      return;
+    }
+    const file = req.files.image;
+    const allowedSize = 2 * 1024 * 1024 * 1024 * 1024 * 1025; // 5MB
+
+    if (file.size > allowedSize) {
+      res.status(400).json({ success: false, message: "Max 5MB allowed" });
+    }
+
     const {
       uid,
       project_name,
       project_domain,
       tagline,
-      image,
       github_repo,
       project_url,
       description,
+      image,
     } = req.body;
 
     // validate if all fields are not empty
@@ -164,26 +179,37 @@ exports.addProject = async (req, res) => {
     }
 
     // save data into db
-    const data = await projectsModel.create({
-      uid,
-      project_name,
-      project_domain,
-      tagline,
-      image,
-      github_repo,
-      project_url,
-      description,
-    });
 
-    if (data) {
-      return res
-        .status(200)
-        .json({ success: true, message: "Data updated successfully" });
-    } else {
-      return res
-        .status(400)
-        .json({ success: false, message: "Data not updated successfully" });
-    }
+    cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+      if (!err) {
+        const data = await projectsModel.create({
+          uid,
+          project_name: project_name.toLowerCase(),
+          project_domain: project_domain.toLowerCase(),
+          tagline,
+          github_repo,
+          project_url,
+          description,
+          image: result.url
+        });
+        if (data) {
+          return res
+            .status(200)
+            .json({ success: true, message: "Data updated successfully" });
+        } else {
+          return res
+            .status(400)
+            .json({ success: false, message: "Data not updated successfully" });
+        }
+      } else {
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message: "Data not updated successfully file upload error",
+          });
+      }
+    });
   } catch (e) {
     return res.status(500).json({ err: e.message });
   }
@@ -224,6 +250,34 @@ exports.deleteProjectById = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Project not deleted", success: false });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.searchAllProjectsPagination = async (req, res) => {
+  try {
+    const { project_name, project_domain } = req.body;
+
+    const result = await projectsModel.find({
+      $and: [
+        { project_name: { $regex: `${project_name.toLowerCase()}` } },
+        { project_domain: { $regex: `${project_domain.toLowerCase()}` } },
+      ],
+    });
+
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        data: null,
+      });
     }
   } catch (e) {
     console.log(e);

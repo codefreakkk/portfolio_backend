@@ -22,13 +22,16 @@ router.get(
 router.get(
   "/getallprojectbyid-pagination/:page",
   protect,
-  projectController.getAllProjectsByIdPagination
+  projectController.getAllProjectsPagination
 );
 
 router.get(
   "/getallprojectsbyuserid/:id",
   projectController.getAllProjectsByUserId
 );
+
+
+router.post("/searchallprojects", protect, projectController.searchAllProjectsPagination);
 
 router.post("/addproject", protect, projectController.addProject); // need to work on cover image section
 
