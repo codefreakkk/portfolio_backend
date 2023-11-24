@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const cloudinary = require("cloudinary").v2;
 
 exports.getUserById = async (req, res) => {
   try {
@@ -34,7 +35,7 @@ exports.getUserByName = async (req, res) => {
     console.log(e);
     return res.status(500).json({ err: e.message });
   }
-}
+};
 
 exports.getAccountDetailsById = async (req, res) => {
   try {
@@ -70,6 +71,7 @@ exports.updatePersonalDetailsById = async (req, res) => {
       codeforces,
       gfg,
       linkedin,
+      u_resume,
     } = req.body;
 
     const data = await userModel.findOneAndUpdate(
@@ -89,6 +91,7 @@ exports.updatePersonalDetailsById = async (req, res) => {
           codeforces,
           gfg,
           linkedin,
+          u_resume,
         },
       }
     );
@@ -177,6 +180,53 @@ exports.getAllUserPagination = async (req, res) => {
       });
     }
   } catch (e) {
+    return res.status(500).json({ err: e.message });
+  }
+};
+
+exports.updateProfileImage = async (req, res) => {
+  try {
+    if (!req.files) {
+      res
+        .status(400)
+        .json({ success: false, message: "Please select a file first" });
+      console.log("file not received");
+      return;
+    }
+
+    const file = req.files.image;
+    const allowedSize = 2 * 1024 * 1024 * 1024 * 1024 * 1025; // 5MB
+    const uid = req.user._id.toString();
+
+    if (file.size > allowedSize) {
+      res.status(400).json({ success: false, message: "Max 5MB allowed" });
+    }
+
+    // save image to cloudinary and DB
+    cloudinary.uploader.upload(file.tempFilePath, async (err, data) => {
+      if (!err) {
+        const result = await userModel.findOneAndUpdate(
+          { _id: uid },
+          { u_image: data.url }
+        );
+        if (result) {
+          return res
+            .status(200)
+            .json({ success: true, message: "Profile Image updated" });
+        }
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, message: "Profile Image not updated some database issue" });
+      }
+
+      // if anything goes wrong
+      return res
+        .status(400)
+        .json({ success: false, message: "Profile Image not updated" });
+    });
+  } catch (e) {
+    console.log(e);
     return res.status(500).json({ err: e.message });
   }
 };
